@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summarizer - Vietnamese</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto py-10 px-4">
+        <h1 class="text-3xl font-bold text-center text-blue-600 mb-8">Vietnamese Text Summarization</h1>
+
+        <form action="/summarize" method="post" class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <label class="block mb-2 font-semibold">Văn bản gốc:</label>
+            <textarea name="text" rows="8" class="w-full p-4 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" placeholder="Dán văn bản cần tóm tắt vào đây...">{{ original_text }}</textarea>
+
+            <div class="mt-4 flex items-center space-x-6">
+                <span class="font-semibold">Phương pháp:</span>
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" name="methods" value="extractive" class="w-4 h-4 text-blue-600" checked>
+                    <span>Trích xuất (Extractive)</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" name="methods" value="abstractive" class="w-4 h-4 text-green-600">
+                    <span>Tóm tắt ý (Abstractive)</span>
+                </label>
+            </div>
+
+            <button type="submit" class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Tóm tắt ngay</button>
+        </form>
+
+        {% if error %}
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8">{{ error }}</div>
+        {% endif %}
+
+        {% if results %}
+            <div class="grid grid-cols-1 md:grid-cols-{{ results|length }} gap-6">
+                {% if results.extractive %}
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h2 class="text-xl font-bold text-blue-800 mb-3">Kết quả Trích xuất (Extractive)</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ results.extractive }}</p>
+                </div>
+                {% endif %}
+
+                {% if results.abstractive %}
+                <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                    <h2 class="text-xl font-bold text-green-800 mb-3">Kết quả Tóm tắt ý (Abstractive)</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ results.abstractive }}</p>
+                </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
