@@ -33,7 +33,7 @@ class ExtractiveSummarizer:
         return result
 
     @torch.no_grad()
-    def summarize(self, text, top_k=3, max_length=256, threshold=0.7, max_summary_words=60):
+    def summarize(self, text, top_k=3, max_length=256, max_summary_words=60):
         text = " ".join(text.split())
         raw_sentences = self._split_sentences(text)
         if not raw_sentences: return ""
@@ -51,31 +51,23 @@ class ExtractiveSummarizer:
         outputs = self.model(**inputs)
         probs = torch.softmax(outputs.logits, dim=-1)[:, 1].cpu().numpy()
 
-        candidate_indices = np.where(probs >= threshold)[0]
-        
-        if len(candidate_indices) == 0:
-            candidate_indices = np.array([np.argmax(probs)])
-
-        sorted_candidates = candidate_indices[np.argsort(probs[candidate_indices])[::-1]]
+        sorted_indices = np.argsort(probs)[::-1]
 
         selected_indices = []
         current_word_count = 0
-        
-        for idx in sorted_candidates:
+
+        for idx in sorted_indices:
             sentence = raw_sentences[idx]
             words = sentence.split()
-            
+
             if current_word_count + len(words) <= max_summary_words:
                 selected_indices.append(idx)
                 current_word_count += len(words)
-            
+
             if len(selected_indices) >= top_k:
                 break
-        
-        if not selected_indices:
-            selected_indices = [sorted_candidates[0]]
 
-        selected_indices.sort() 
+        selected_indices.sort()
 
         summary = " ".join([raw_sentences[i] for i in selected_indices])
         return summary.strip()
