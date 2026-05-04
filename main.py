@@ -6,12 +6,14 @@ import uvicorn
 
 from abstractive import AbstractiveSummarizer
 from extractive import ExtractiveSummarizer
+from llama_summarizer import LlamaSummarizer
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 abs_summarizer = AbstractiveSummarizer(model_path="./best-lora")
 ext_summarizer = ExtractiveSummarizer(adapter_path="./best-lora-adapter")
+llama_summarizer = LlamaSummarizer(adapter_path="./final-adapter")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -38,9 +40,12 @@ async def do_summarize(
     try:
         if "extractive" in methods:
             results["extractive"] = ext_summarizer.summarize(text, top_k=2)
-            
+
         if "abstractive" in methods:
             results["abstractive"] = abs_summarizer.generate_summary(text)
+
+        if "llama" in methods:
+            results["llama"] = llama_summarizer.summarize(text)
             
     except Exception as e:
         return templates.TemplateResponse(

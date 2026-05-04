@@ -24,6 +24,10 @@
                     <input type="checkbox" name="methods" value="abstractive" class="w-4 h-4 text-green-600">
                     <span>Tóm tắt ý (Abstractive)</span>
                 </label>
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" name="methods" value="llama" class="w-4 h-4 text-purple-600">
+                    <span>Llama 3.2</span>
+                </label>
             </div>
 
             <button type="submit" class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Tóm tắt ngay</button>
@@ -46,6 +50,13 @@
                 <div class="bg-green-50 p-6 rounded-lg border border-green-200">
                     <h2 class="text-xl font-bold text-green-800 mb-3">Kết quả Tóm tắt ý (Abstractive)</h2>
                     <p class="text-gray-700 leading-relaxed">{{ results.abstractive }}</p>
+                </div>
+                {% endif %}
+
+                {% if results.llama %}
+                <div class="bg-purple-50 p-6 rounded-lg border border-purple-200">
+                    <h2 class="text-xl font-bold text-purple-800 mb-3">Kết quả Llama 3.2</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ results.llama }}</p>
                 </div>
                 {% endif %}
             </div>
