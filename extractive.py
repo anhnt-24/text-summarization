@@ -34,6 +34,7 @@ class ExtractiveSummarizer:
 
     @torch.no_grad()
     def summarize(self, text, top_k=3, max_length=256, threshold=0.7, max_summary_words=60):
+        text = " ".join(text.split())
         raw_sentences = self._split_sentences(text)
         if not raw_sentences: return ""
 
