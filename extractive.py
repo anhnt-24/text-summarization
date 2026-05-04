@@ -5,6 +5,10 @@ from peft import PeftModel
 from pyvi import ViTokenizer
 import re
 
+
+def normalize_whitespace(text):
+    return re.sub(r'\s+', ' ', text).strip()
+
 class ExtractiveSummarizer:
     def __init__(self, adapter_path, model_name="vinai/phobert-base-v2"):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -34,7 +38,7 @@ class ExtractiveSummarizer:
 
     @torch.no_grad()
     def summarize(self, text, top_k=3, max_length=256, max_summary_words=60):
-        text = " ".join(text.split())
+        text = normalize_whitespace(text)
         raw_sentences = self._split_sentences(text)
         if not raw_sentences: return ""
 
